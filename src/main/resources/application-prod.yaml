@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432//dev_db?sslmode=disable&stringtype=unspecified&connectTimeout=30&socketTimeout=30&tcpKeepAlive=true
+    username:
+    password:
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      timeout: 5000
+
+  jackson:
+    default-property-inclusion: non_null
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: space.changle.lingbot.**.repo.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    map-underscore-to-camel-case: true
+
+telegram:
+  bot:
+    token: <token>
+
+  proxy:
+    host: 127.0.0.1
+    port: 7897
