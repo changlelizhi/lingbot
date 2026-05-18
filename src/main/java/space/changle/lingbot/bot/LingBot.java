@@ -41,6 +41,7 @@ public class LingBot implements SpringLongPollingBot, LongPollingSingleThreadUpd
 
     private final TelegramClient telegramClient;
 
+
     public LingBot(TelegramClient telegramClient) {
         this.telegramClient = telegramClient;
     }
@@ -58,7 +59,7 @@ public class LingBot implements SpringLongPollingBot, LongPollingSingleThreadUpd
 
     @Override
     public void consume(Update update) {
-        log.info("收到消息：{}", JsonUtil.toJson(update));
+        log.info("收到消息：{}", JsonUtil.toPrettyJson(update));
 
     }
 

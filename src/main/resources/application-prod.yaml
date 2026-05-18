@@ -2,22 +2,22 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432//dev_db?sslmode=disable&stringtype=unspecified&connectTimeout=30&socketTimeout=30&tcpKeepAlive=true
-    username:
-    password:
+    username: user
+    password: pgsqlpassword
 
   data:
     redis:
       host: localhost
       port: 6379
-      password:
+      password: redispassword
       timeout: 5000
 
   jackson:
     default-property-inclusion: non_null
 
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: space.changle.lingbot.**.repo.entity
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: space.changle.lingbot.**.entity
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
     map-underscore-to-camel-case: true

@@ -36,6 +36,7 @@
         <jjwt.version>0.13.0</jjwt.version>
         <telegram.version>9.5.0</telegram.version>
         <postgresql.version>42.7.10</postgresql.version>
+        <commons-codec.version>1.22.0</commons-codec.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <mybatis-spring-boot-starter.version>3.0.5</mybatis-spring-boot-starter.version>
 
@@ -116,6 +117,13 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>${jjwt.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
         </dependency>
 
         <!--test-->
