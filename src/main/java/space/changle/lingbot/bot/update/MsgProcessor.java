@@ -14,5 +14,5 @@ public interface MsgProcessor {
 
     boolean supports(Update update);
 
-    void process(TelegramClient telegramClient, Object update);
+    void process(TelegramClient telegramClient, Update update);
 }

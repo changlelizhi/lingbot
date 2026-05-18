@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
  */
 public interface MessageService {
 
-    void sendHtmlMessage(TelegramClient telegramClient,String chatId, String message);
+    void sendHtmlMessage(TelegramClient telegramClient, Long chatId, String message);
 
-    void sendStartCommandMessage(TelegramClient telegramClient,Long chatId);
+    void sendStartCommandMessage(TelegramClient telegramClient, Long chatId);
 }

@@ -3,6 +3,7 @@ package space.changle.lingbot.bot.update;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
+import space.changle.lingbot.bot.update.command.CommandDispatcher;
 
 /**
  * @author 长乐
@@ -14,16 +15,19 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 @Component
 public class CommandMsgProcessor implements MsgProcessor {
 
+    private final CommandDispatcher commandDispatcher;
+
+    public CommandMsgProcessor(CommandDispatcher commandDispatcher) {
+        this.commandDispatcher = commandDispatcher;
+    }
 
     @Override
     public boolean supports(Update update) {
-
-      //  update.hasMessage() && update.getMessage().isCommand() && update.getMessage()
         return update.hasMessage() && update.getMessage().isCommand();
     }
 
     @Override
-    public void process(TelegramClient telegramClient, Object update) {
-
+    public void process(TelegramClient telegramClient, Update update) {
+        commandDispatcher.dispatch(telegramClient, update);
     }
 }

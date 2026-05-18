@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScope
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeAllPrivateChats;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
+import space.changle.lingbot.bot.update.MsgDispatcher;
 import space.changle.lingbot.common.util.JsonUtil;
 
 import java.util.ArrayList;
@@ -41,9 +42,12 @@ public class LingBot implements SpringLongPollingBot, LongPollingSingleThreadUpd
 
     private final TelegramClient telegramClient;
 
+    private final MsgDispatcher msgDispatcher;
 
-    public LingBot(TelegramClient telegramClient) {
+
+    public LingBot(TelegramClient telegramClient, MsgDispatcher msgDispatcher) {
         this.telegramClient = telegramClient;
+        this.msgDispatcher = msgDispatcher;
     }
 
 
@@ -59,8 +63,8 @@ public class LingBot implements SpringLongPollingBot, LongPollingSingleThreadUpd
 
     @Override
     public void consume(Update update) {
-        log.info("收到消息：{}", JsonUtil.toPrettyJson(update));
-
+        log.info("收到消息：{}", JsonUtil.toJson(update));
+        msgDispatcher.dispatch(telegramClient, update);
     }
 
     /**
@@ -69,38 +73,37 @@ public class LingBot implements SpringLongPollingBot, LongPollingSingleThreadUpd
     @AfterBotRegistration
     public void afterRegistration(BotSession botSession) {
         this.botSession = botSession;  // 保存引用
-
         if (!botSession.isRunning()) {
             log.error("Bot 启动失败 ❌");
             return;
         }
         try {
-            setBotCommons();
+            setBotCommands();
             log.info("Bot 启动成功 ✅");
         } catch (TelegramApiException e) {
             log.error("Bot 启动失败 ❌", e);
         }
-
     }
 
     /**
      * 定期检查 BotSession 状态并作出响应
-     * 每 30 秒检查一次
+     * 每 3 分钟检查一次
      */
-    @Scheduled(fixedDelay = 3 * 60 * 1000)
-    public void monitorBotSession() throws TelegramApiException {
+    @Scheduled(fixedDelay = 3* 60 * 1000)
+    public void monitorBotSession()  {
         if (botSession == null) {
             log.warn("BotSession 尚未初始化");
             return;
         }
-
         boolean running = botSession.isRunning();
         if (!running) {
-            log.warn("⚠️ BotSession 已停止运行！");
-            // 在这里实现你的应急措施——例如尝试重新注册、发送告警等、
-            botSession.start();
-        } else {
-            log.info("BotSession 运行中 ✅");
+            log.warn("BotSession 已停止，尝试重新启动...");
+            try {
+                botSession.start();
+                log.info("BotSession 已重新启动");
+            } catch (TelegramApiException e) {
+                log.error("BotSession 重启失败", e);
+            }
         }
     }
 
@@ -116,7 +119,7 @@ public class LingBot implements SpringLongPollingBot, LongPollingSingleThreadUpd
     /**
      * 设置bot命令
      */
-    private void setBotCommons() throws TelegramApiException {
+    private void setBotCommands() throws TelegramApiException {
         List<BotCommand> privateCommands = new ArrayList<>();
         List<BotCommand> groupCommands = new ArrayList<>();
         for (LingBotCommand command : LingBotCommand.values()) {
@@ -133,7 +136,6 @@ public class LingBot implements SpringLongPollingBot, LongPollingSingleThreadUpd
             registerCommands(BotCommandScopeAllGroupChats.builder().build(), groupCommands);
         }
     }
-
 
     private void registerCommands(BotCommandScope scope, List<BotCommand> commands) throws TelegramApiException {
         telegramClient.execute(SetMyCommands.builder().scope(scope).commands(commands).build());
