@@ -7,5 +7,5 @@ package space.changle.lingbot.dto;
  * @time 21:56
  * @description
  */
-public record TmaUserSignInOutDto(String token) {
+public record TmaLoginOutDto(String token) {
 }

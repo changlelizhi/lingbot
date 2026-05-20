@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import space.changle.lingbot.auth.UserRole;
+import space.changle.lingbot.user.service.enums.UserStatus;
 
 /**
  * @author 长乐
@@ -18,5 +20,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class UserEntity {
 
-        private Long id;
+    private Long userId;
+
+    private UserStatus status;
+
+    private UserRole role;
 }

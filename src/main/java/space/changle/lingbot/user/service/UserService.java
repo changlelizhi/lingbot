@@ -1,6 +1,7 @@
 package space.changle.lingbot.user.service;
 
-import space.changle.lingbot.dto.TmaUserSignInOutDto;
+import space.changle.lingbot.dto.CheckUserOutDto;
+import space.changle.lingbot.dto.TmaLoginOutDto;
 
 
 /**
@@ -12,5 +13,12 @@ import space.changle.lingbot.dto.TmaUserSignInOutDto;
  */
 public interface UserService {
 
-    TmaUserSignInOutDto tmaUserSignIn(String tmaInitData);
+    TmaLoginOutDto tmaUserSignIn(String tmaInitData);
+
+    CheckUserOutDto isUserRegistered(String initData);
+
+    /*===============bot相关的服务===============*/
+
+
+
 }

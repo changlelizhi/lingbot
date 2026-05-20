@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 @Getter
 public enum LingBotCommand {
 
+
     START("/start", "🚀 开始使用", Scope.PRIVATE),
 
     CHINESE("/chinese", "🌐 中文", Scope.PRIVATE),

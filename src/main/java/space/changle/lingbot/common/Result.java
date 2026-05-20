@@ -16,14 +16,22 @@ public enum Result {
 
     AUTH_INIT_EXPIRED(10001,"初始化参数已过期"),
 
-    INVALID_SIGNATURE(1002, "无效的签名" ),
+    INVALID_SIGNATURE(10002, "无效的签名" ),
+
+    TOKEN_MISSING(10003, "缺少Token"),
+
+    TOKEN_EXPIRED(10004, "token已过期"),
+
+    TOKEN_INVALID(10005, "token无效"),
+
+    FORBIDDEN(10403, "权限不足"),
 
     SUCCESS(20000, "操作成功"),
 
 
     FAIL(50000, "操作失败"),
 
-    ;
+    USER_BANNED(30001, "该账号已被封禁");
 
 
 

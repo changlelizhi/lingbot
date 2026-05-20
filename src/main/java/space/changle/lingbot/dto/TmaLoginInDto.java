@@ -9,6 +9,6 @@ import jakarta.validation.constraints.NotBlank;
  * @time 21:52
  * @description 用户注册
  */
-public record TmaUserSignInInDto(@NotBlank(message = "initData不能为空") String initData)  {
+public record TmaLoginInDto(@NotBlank(message = "initData不能为空") String initData)  {
 
 }

@@ -11,7 +11,12 @@ public class UserConstants {
 
     public static final String USER_ID_KEY = "user:id:";
 
+    public static final String USER_ACTIVE_KEY = "user:active:";
+
+    public static final String USER_BAN_KEY="user:ban:";
+
     public static final String USER_TOKEN_KEY = "user:token:";
+
 
 
 }

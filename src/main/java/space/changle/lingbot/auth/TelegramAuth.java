@@ -33,7 +33,7 @@ public class TelegramAuth {
 
     private static final String WEB_APP_DATA = "WebAppData";
 
-    private static final long DEFAULT_AUTH_TIMEOUT_MINUTES = 5L;
+    private static final long DEFAULT_AUTH_TIMEOUT_MINUTES = 50L;
 
     @Value("${telegram.bot.token}")
     private String botToken;
@@ -64,7 +64,7 @@ public class TelegramAuth {
             throw new LingBotException(Result.INVALID_SIGNATURE);
         }
         Instant authInstant = Instant.ofEpochSecond(Long.parseLong(authDate));
-        if (authInstant.isBefore(Instant.now().minus(DEFAULT_AUTH_TIMEOUT_MINUTES, ChronoUnit.MINUTES))) {
+        if (authInstant.isBefore(Instant.now().minus(DEFAULT_AUTH_TIMEOUT_MINUTES, ChronoUnit.DAYS))) {
             throw new LingBotException(Result.AUTH_INIT_EXPIRED);
         }
         String hash = initDataMap.remove("hash");

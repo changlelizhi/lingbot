@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
 
-    <property name="LOG_PATH" value="D:/changle/lingbotlog"/>
+    <property name="LOG_PATH" value="D:/lingbotlog"/>
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
 
     <!-- 控制台输出 -->
@@ -12,16 +12,14 @@
         </encoder>
     </appender>
 
-    <!-- 所有级别的综合日志文件 - 按天打包 -->
+    <!-- 综合日志文件 - 按天+大小滚动 -->
     <appender name="DAILY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/lingBot.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!-- 按日期打包，所有级别在一起 -->
             <fileNamePattern>${LOG_PATH}/lingBot.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>3GB</totalSizeCap>
-            <compression>gzip</compression>  <!-- 添加压缩支持 -->
         </rollingPolicy>
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
@@ -37,7 +35,6 @@
             <maxFileSize>50MB</maxFileSize>
             <maxHistory>60</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
-            <compression>gzip</compression>
         </rollingPolicy>
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
@@ -50,14 +47,49 @@
         </filter>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
+    <!-- 异步文件输出，避免磁盘I/O阻塞业务线程 -->
+    <appender name="ASYNC_DAILY_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>false</neverBlock>
         <appender-ref ref="DAILY_FILE"/>
+    </appender>
+
+    <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>256</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>false</neverBlock>
         <appender-ref ref="ERROR_FILE"/>
-    </root>
+    </appender>
+    <!-- ==================== 开发环境 ==================== -->
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_DAILY_FILE"/>
+            <appender-ref ref="ASYNC_ERROR_FILE"/>
+        </root>
+        <logger name="space.changle.lingbot" level="DEBUG"/>
+        <logger name="space.changle.lingbot.**.mapper" level="DEBUG"/>
+    </springProfile>
 
-    <!-- 添加MyBatis SQL日志配置（可选） -->
-    <logger name="space.changle.lynnia.repo.mapper" level="DEBUG"/>
+    <!-- ==================== 生产环境 ==================== -->
+    <springProfile name="prod">
+        <root level="WARN">
+            <appender-ref ref="ASYNC_DAILY_FILE"/>
+            <appender-ref ref="ASYNC_ERROR_FILE"/>
+        </root>
 
+        <logger name="space.changle.lingbot" level="INFO"/>
+    </springProfile>
+
+    <!-- 默认配置（未指定 profile 时使用） -->
+
+    <springProfile name="!dev &amp; !prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_DAILY_FILE"/>
+            <appender-ref ref="ASYNC_ERROR_FILE"/>
+        </root>
+    </springProfile>
 
 </configuration>
